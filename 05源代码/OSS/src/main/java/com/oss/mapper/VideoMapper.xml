@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.VideoDao">
+    <resultMap id="Coursefile" type="com.oss.domain.Coursefile">
+        <id column="flie_id" jdbcType="INTEGER" property="id" />
+        <result column="file_name" jdbcType="VARCHAR" property="name" />
+        <result column="file_url" jdbcType="VARCHAR" property="url" />
+        <result column="file_text" jdbcType="VARCHAR" property="text" />
+    </resultMap>
+
+    <select id="findVideoBychapterid" parameterType="java.lang.Integer" resultType="com.oss.domain.Coursefile">
+     select file_id as id,file_name as name,file_url as url,file_text as text,file_type as type
+	        from chapter,chapterfile,coursefile
+         where  chapter.chapter_id=chapterfile.chapterid
+         and    coursefile.file_id=chapterfile.fileid
+         and  coursefile.file_type=0
+         and chapterid=#{chapterid}
+</select>
+</mapper>

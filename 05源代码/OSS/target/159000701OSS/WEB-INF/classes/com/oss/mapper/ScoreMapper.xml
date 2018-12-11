@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oss.dao.ScoreDao" >
+    <resultMap id="BaseResultMap" type="com.oss.domain.Score" >
+        <id column="score_id" property="scoreid" jdbcType="INTEGER" />
+        <result column="studentcode" property="studentcode" jdbcType="VARCHAR" />
+        <result column="score_stdname" property="studentname" jdbcType="VARCHAR" />
+        <result column="score_batchname" property="batchname" jdbcType="VARCHAR" />
+        <result column="score_coursename" property="coursename" jdbcType="VARCHAR" />
+        <result column="score" property="score" jdbcType="NUMERIC" />
+
+    </resultMap>
+    <sql id="Base_Column_List" >
+    score_id, studentcode, score_stdname,score_batchname,score_coursename, score
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+        <include refid="Base_Column_List" />
+        from score
+        where score_id = #{scoreid,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from score
+    where score_id = #{scoreid,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.oss.domain.Score" >
+    insert into score (score_id, studentcode,score_stdname,score_batchname,score_coursename, score)
+    values (#{scoreid}, #{studentcode}, #{studentname},#{batchname},#{coursename},
+      #{score})
+  </insert>
+    <insert id="insertSelective" parameterType="com.oss.domain.Score" >
+        insert into score
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="scoreid != null" >
+                scoreid,
+            </if>
+            <if test="studentcode != null" >
+                studentcode,
+            </if>
+            <if test="studentname != null" >
+                score_stdname,
+            </if>
+            <if test="batchname != null" >
+                score_batchname,
+            </if>
+            <if test="coursename != null" >
+                score_coursename,
+            </if>
+            <if test="score != null" >
+                score,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="scoreid != null" >
+                #{scoreid,jdbcType=INTEGER},
+            </if>
+            <if test="studentcode != null" >
+                #{studentcode,jdbcType=VARCHAR},
+            </if>
+            <if test="studentname != null" >
+                #{studentname,jdbcType=VARCHAR},
+            </if>
+            <if test="batchname != null" >
+                #{batchname,jdbcType=VARCHAR},
+            </if>
+            <if test="coursename != null" >
+                #{coursename,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null" >
+                #{score,jdbcType=NUMERIC},
+            </if>
+
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.oss.domain.Score" >
+        update score
+        <set >
+            <if test="studentcode != null" >
+                studentcode = #{studentcode,jdbcType=VARCHAR},
+            </if>
+            <if test="studentname != null" >
+                score_stdname = #{studentname,jdbcType=VARCHAR},
+            </if>
+            <if test="batchname != null" >
+                score_batchname = #{batchname,jdbcType=VARCHAR},
+            </if>
+            <if test="coursename != null" >
+                score_coursename = #{coursename,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null" >
+                score = #{score,jdbcType=NUMERIC},
+            </if>
+        </set>
+        where scoreid = #{scoreid,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.oss.domain.Score" >
+    update score
+    set studentcode = #{studentcode,jdbcType=VARCHAR},
+      score_stdname= #{studentname,jdbcType=VARCHAR},
+       score_batchname= #{batchname,jdbcType=VARCHAR},
+        score_coursename= #{coursename,jdbcType=VARCHAR},
+      score = #{score,jdbcType=NUMERIC},
+    where scoreid = #{scoreid,jdbcType=INTEGER}
+  </update>
+
+    <select id="findscore" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from score
+    </select>
+
+    <delete id="delScore" parameterType="java.lang.Integer">
+        DELETE a FROM score a WHERE a.score_id IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

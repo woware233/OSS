@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.BatchDao">
+
+    <insert id="addBatch" useGeneratedKeys="true" parameterType="com.oss.domain.Batch">
+
+        INSERT INTO batch (batch_name)
+        VALUES
+            (#{batchname})
+
+    </insert>
+
+    <select id="findBatch" resultType="com.oss.domain.Batch">
+        select batch_id as batchid,batch_name as batchname from batch
+    </select>
+
+
+    <delete id="delBatch" parameterType="java.lang.Integer">
+        DELETE a,b FROM batch a LEFT JOIN batchcourse b ON a.batch_id = b.batchid WHERE a.batch_id IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<select id="findbatchcourse" resultType="com.oss.domain.BatchCourse">
+    select batch_id as batchid,batch_name as batchname,course_id as courseid,course_name as coursename
+	        from batch,course,batchcourse
+         where  batch_id=batchid
+         and    course_id=courseid
+</select>
+
+    <insert id="addBatchCourse" useGeneratedKeys="true" parameterType="com.oss.domain.BatchCourse">
+
+        INSERT INTO batchcourse (batchid,courseid)
+        VALUES
+            (#{batchid},#{courseid})
+
+    </insert>
+
+    <insert id="ChooseBatch" useGeneratedKeys="true" parameterType="com.oss.domain.UserBatch">
+
+        INSERT INTO userbatch (userid,batchid)
+        VALUES
+            (#{userid},#{batchid})
+
+    </insert>
+
+<select id="findusercount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(*) from userbatch where userid=#{userid}
+</select>
+
+    <select id="findchoosefile" parameterType="java.lang.Integer" resultType="com.oss.domain.Coursefile">
+        select file_id as id,file_name as name from coursefile,batch,batchcourse,course,coursechapter,chapterfile
+        where file_type=0
+        and batch.batch_id=batchcourse.batchid
+        and batchcourse.courseid=course.course_id
+        and batchcourse.courseid=coursechapter.courseid
+        and coursechapter.chapterid=chapterfile.chapterid
+        and chapterfile.fileid=coursefile.file_id
+        and batch_id=#{batchname}
+    </select>
+
+</mapper>

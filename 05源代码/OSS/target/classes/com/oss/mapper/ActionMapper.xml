@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.ActionDao">
+<resultMap id="Action" type="com.oss.domain.Action">
+    <id column="action_id" jdbcType="INTEGER" property="id" />
+    <result column="action_name" jdbcType="VARCHAR" property="name" />
+    <result column="action_url" jdbcType="VARCHAR" property="href" />
+    <result column="action_pid" jdbcType="VARCHAR" property="pid" />
+</resultMap>
+    <select id="findActionListByUserId" parameterType="java.lang.Integer" resultType="com.oss.domain.Action">
+	        select  action_id as id, action_name as name, action_url as href, action_pid as pid
+	        from actions,roleaction,role,userrole ,users
+         where  actions.action_id=roleaction.actionid
+         and role.role_id=roleaction.roleid
+         and role.role_id=userrole.roleid
+         and users.user_id=userrole.userid
+         and user_id=#{userid}
+  </select>
+
+    <select id="findActionList" resultType="com.oss.domain.Action">
+        select action_id as id,action_name as name,action_url as href,action_pid as pid from actions
+    </select>
+
+    <select id="actioncount" resultType="java.lang.Integer">
+        select count(*) from actions
+    </select>
+
+    <select id="roleAction" parameterType="java.lang.Integer" resultType="com.oss.domain.Action">
+        select action_id as id,action_name as name from role,roleaction,actions
+ where role.role_id=roleaction.roleid
+ and   actions.action_id=roleaction.actionid
+ and   role.role_id=#{roleid}
+    </select>
+
+    <select id="allAction" resultType="com.oss.domain.Action">
+         select action_id as id,action_name as name from actions
+    </select>
+
+    <insert id="addAction" parameterType="com.oss.domain.Action">
+        insert into actions(action_name,action_url,action_pid)
+        value (#{name},#{href},#{pid})
+    </insert>
+
+    <delete id="deleteAction" parameterType="java.lang.Integer">
+        DELETE a,b FROM actions b LEFT JOIN roleaction a ON a.actionid = b.action_id WHERE b.action_id IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

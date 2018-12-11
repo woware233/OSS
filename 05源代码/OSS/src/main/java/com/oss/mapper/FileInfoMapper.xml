@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.FileinfoDao">
+    <resultMap id="Fileinfo" type="com.oss.domain.FileInfo">
+        <id column="fileinfo_id" jdbcType="INTEGER" property="id" />
+        <result column="file_id" jdbcType="INTEGER" property="fileid" />
+        <result column="fileinfo_alltime" jdbcType="NUMERIC" property="alltime" />
+        <result column="fileinfo_playtime" jdbcType="NUMERIC" property="playtime" />
+        <result column="fileinfo_ratio" jdbcType="NUMERIC" property="firatio" />
+    </resultMap>
+    <insert id="addFileinfo" parameterType="com.oss.domain.FileInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        fileinfo (file_id,fileinfo_alltime,fileinfo_playtime,fileinfo_ratio)
+        VALUES(#{fileid},#{alltime},#{playtime},#{firatio})
+
+    </insert>
+
+    <insert id="addUserFile" parameterType="com.oss.domain.UserFile" useGeneratedKeys="true">
+        INSERT INTO
+        userfile (userid,fileinfoid)
+        VALUES(#{userid},#{fileinfoid})
+
+    </insert>
+
+<select id="upFileInfo" parameterType="com.oss.domain.upFileInfo" resultType="com.oss.domain.FileInfo">
+    select fileinfo_id as id,file_id as fileid,fileinfo_alltime as alltime,fileinfo_playtime as playtime,fileinfo_ratio as firatio
+    from fileinfo,userfile where fileinfoid=fileinfo_id and file_id=#{fileid} and userid=#{userid}
+</select>
+
+    <delete id="delfileinfo" parameterType="java.lang.Integer">
+       DELETE a,b FROM fileinfo b LEFT JOIN userfile a ON a.fileinfoid = b.fileinfo_id WHERE b.file_id=#{fileid}
+    </delete>
+
+    <select id="SelectInfo" parameterType="com.oss.domain.UserFileid" resultType="java.lang.Integer">
+        select count(*) from fileinfo,userfile where file_id=#{fileid} and userid=#{userid}
+    </select>
+
+    <update id="updateFileinfo" parameterType="com.oss.domain.FileInfo">
+       update fileinfo
+	set fileinfo_alltime=#{alltime},
+	fileinfo_playtime=#{playtime},
+	fileinfo_ratio=#{firatio}
+	where file_id=#{fileid}
+
+    </update>
+
+</mapper>

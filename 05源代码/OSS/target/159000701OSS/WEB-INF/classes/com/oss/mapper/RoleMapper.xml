@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.RoleDao">
+
+    <insert id="adduserrole" useGeneratedKeys="true" parameterType="com.oss.domain.UserRole">
+
+        INSERT INTO userrole (userid,roleid)
+        VALUES
+            (#{userid},#{roleid})
+
+    </insert>
+
+    <select id="findrole" resultType="com.oss.domain.Role">
+        select role_id as roleid,role_name as rolename from role
+    </select>
+
+    <insert id="addroleaction" useGeneratedKeys="true" parameterType="com.oss.domain.RoleAction">
+
+        INSERT INTO roleaction (roleid,actionid)
+        VALUES
+            (#{roleid},#{actionid})
+
+    </insert>
+
+    <delete id="delroleaction" parameterType="com.oss.domain.RoleAction">
+        delete  from roleaction where roleid=#{roleid} and actionid=#{actionid}
+    </delete>
+
+</mapper>

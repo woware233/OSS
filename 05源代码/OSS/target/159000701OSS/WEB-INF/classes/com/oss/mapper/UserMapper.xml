@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.UserDao">
+<resultMap id="users" type="com.oss.domain.User">
+    <id column="user_id" jdbcType="INTEGER" property="userid" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="user_state" jdbcType="VARCHAR" property="state" />
+
+</resultMap>
+
+<select id="userlogin" parameterType="com.oss.domain.User" resultType="com.oss.domain.User">
+select user_id as userid,username,password,user_state as state
+   from users
+    where username = #{username} and password = #{password}
+</select>
+
+    <select id="usermanager" resultType="com.oss.domain.User">
+        select user_id as userid,username,password,user_state as state from users
+    </select>
+
+
+    <!-- 增加用户 -->
+    <insert id="addUser" parameterType="com.oss.domain.User" useGeneratedKeys="true" keyProperty="userid">
+        INSERT INTO
+        users(username,password,user_state)
+        VALUES(#{username},#{password},#{state})
+
+    </insert>
+
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        DELETE a,b FROM userrole a LEFT JOIN users b ON a.userid = b.user_id WHERE a.userid IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+<update id="shenheUser" parameterType="com.oss.domain.User">
+    update users
+    set user_state = #{state,jdbcType=INTEGER}
+    where user_id = #{userid,jdbcType=INTEGER}
+</update>
+
+</mapper>

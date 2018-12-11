@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.ChapterDao">
+    <resultMap id="Chapter" type="com.oss.domain.Chapter">
+        <id column="chapter_id" jdbcType="INTEGER" property="id" />
+        <result column="chapter_name" jdbcType="VARCHAR" property="name" />
+        <result column="chapter_pid" jdbcType="VARCHAR" property="pid" />
+    </resultMap>
+    <select id="findChapterListByCourseId" parameterType="java.lang.Integer" resultType="com.oss.domain.Chapter">
+	    select  chapter_id as id, chapter_name as name, chapter_pid as pid
+	        from course,coursechapter,chapter
+         where  chapter.chapter_id=coursechapter.chapterid
+         and    coursechapter.courseid=course.course_id
+         and course_id=#{courseid}
+  </select>
+
+    <select id="findChapterList" resultType="com.oss.domain.Chapter">
+        select chapter_id as id,chapter_name as name,chapter_pid as pid from chapter
+    </select>
+
+    <insert id="addChapter" useGeneratedKeys="true" parameterType="com.oss.domain.Chapter" keyProperty="id">
+
+        INSERT INTO chapter (chapter_name,chapter_pid)
+        VALUES
+            (#{name},#{pid})
+
+    </insert>
+
+    <insert id="addCourseChapter" useGeneratedKeys="true" parameterType="com.oss.domain.CourseChapter">
+
+        INSERT INTO coursechapter (courseid,chapterid)
+        VALUES
+            (#{courseid},#{chapterid})
+
+    </insert>
+
+    <insert id="addCourseChapterid" useGeneratedKeys="true" parameterType="com.oss.domain.CourseChapter">
+
+        INSERT INTO coursechapter (courseid,chapterid)
+        VALUES
+            (#{courseid},#{chapterid})
+
+    </insert>
+
+    <delete id="deleteAction" parameterType="java.lang.Integer">
+        DELETE a,b FROM actions b LEFT JOIN roleaction a ON a.actionid = b.action_id WHERE b.action_id IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>

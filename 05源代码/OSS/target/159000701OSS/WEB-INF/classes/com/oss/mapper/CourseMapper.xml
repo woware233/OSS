@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.CourseDao">
+
+    <insert id="addCourse" useGeneratedKeys="true" parameterType="com.oss.domain.Course">
+
+        INSERT INTO course (course_name,course_zhibiao,course_cdate)
+        VALUES
+            (#{coursename},#{zhibiao},#{coursetime})
+
+    </insert>
+
+    <select id="findCourse" resultType="com.oss.domain.Course">
+        select course_id as courseid,course_name as coursename from course
+    </select>
+
+
+    <delete id="delCourse" parameterType="java.lang.Integer">
+        DELETE a,b FROM course a LEFT JOIN batchcourse b ON a.course_id = b.courseid WHERE a.course_id IN
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="findCourseByStd" parameterType="java.lang.Integer" resultType="com.oss.domain.Course">
+select course_id as courseid,course_name as coursename from course,batch,userbatch,batchcourse,users
+where users.user_id=userbatch.userid
+and userbatch.batchid=batchcourse.batchid
+and batch.batch_id=batchcourse.batchid
+and courseid=course_id
+and user_id=#{userid}
+    </select>
+
+
+</mapper>

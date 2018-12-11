@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.StudentDao">
+
+    <insert id="addstudentinfo" parameterType="com.oss.domain.Student" useGeneratedKeys="true">
+        INSERT INTO
+        studentinfo(userid,student_name,student_sex,student_email,student_phone)
+        VALUES(#{userid},#{studentname},#{sex},#{email},#{phone})
+
+    </insert>
+
+    <select id="selectStudentById" parameterType="java.lang.Integer" resultType="com.oss.domain.RegisterInfo">
+       select username,password,student_name as studentname,student_sex as sex,student_email as email,student_phone as phone from studentinfo,users
+        where user_id=userid
+        and userid=#{userid}
+    </select>
+
+    <update id="updateStudent" parameterType="com.oss.domain.Student">
+ update studentinfo
+    set  student_name= #{studentname},
+         student_sex= #{sex},
+         student_email= #{email},
+         student_phone = #{phone}
+    where userid = #{userid}
+    </update>
+</mapper>

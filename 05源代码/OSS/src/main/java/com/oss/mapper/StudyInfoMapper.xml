@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oss.dao.StudyInfoDao">
+
+    <select id="findStudyInfo" resultType="com.oss.domain.StudyInfo">
+select username,batch_name as batchname,avg(fileinfo_ratio) as studyratio from fileinfo,coursefile,users,userfile,batch,userbatch
+where user_id=userfile.userid
+and user_id=userbatch.userid
+and userbatch.batchid=batch.batch_id
+and fileinfo.fileinfo_id=userfile.fileinfoid
+and coursefile.file_id=fileinfo.file_id
+group by username
+  </select>
+
+    <select id="findStdStyInfo" parameterType="java.lang.Integer" resultType="com.oss.domain.StdStyInfo">
+        select username,chapter_name as chaptername,fileinfo_ratio as stydratio from fileinfo,userfile,users,chapter,chapterfile
+where
+users.user_id=userfile.userid
+and userfile.fileinfoid=fileinfo.fileinfo_id
+and fileinfo.file_id=chapterfile.fileid
+and chapterid=chapter_id
+and user_id=#{userid}
+group by file_id
+    </select>
+</mapper>
